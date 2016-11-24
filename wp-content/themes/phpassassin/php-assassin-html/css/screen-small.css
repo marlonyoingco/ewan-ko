@@ -1,0 +1,31 @@
+@charset "UTF-8";
+/* SMALL */
+html            	{ height: 100%; background: url(../images/bg-top.png) no-repeat; }
+
+button.red			{ font-size: 1em; padding: 10px 40px 10px 20px; }
+
+header          { margin: 50px 0px 100px 35px; }
+
+menu            {  }
+menu ul.nav-small,
+menu ul.social-top			{ display: none; } 
+menu ul.nav-small li		{ float: right; }
+menu img.logo		{ display: block; margin: 0 auto; width: 40%; height: auto; }
+
+.hero				{ width: 100%; height: 680px; padding: 0px 0 0 0; text-align: center; background: url(../images/bg-hero.png) bottom left no-repeat; }
+.hero span			{ display: block; heigth: auto; margin: 0 0 0 0; padding: 0 40px 250px 40px; background: url(../images/bg-face-small.png) bottom center no-repeat;  } 
+.hero span h1		{ color: #b30404; font-size: 1.4em; line-height: .9em;  }
+.hero span button 	{ margin-bottom: 100px; }
+
+.content			{ height: auto; margin: 0 40px; }
+.content h1			{ margin: 0 0 .5em 0;}
+.content .col1		{ margin: 0 0 20% 0; }
+.content .col2		{ margin: 0 0 20% 0; }
+.content .col3		{ padding: 20% 0 0 0; text-align: center; }
+.content ul.team 			{ }
+.content ul.team li 		{ display: inline-block; width: 40%; min-width: 200px; margin-top: 8%; }
+.content ul.team li span	{ display: block; width: 100%; padding-bottom: 100%; } 
+
+footer				{  }
+footer .col1		{ margin: 0 40px 40px 40px; border-bottom: 3px solid #7a7a7a;  }
+footer .col2		{ margin: 0 40px 80px 40px; }

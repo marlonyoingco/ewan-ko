@@ -1,0 +1,31 @@
+@charset "UTF-8";
+/* MEDIUM */
+html            	{ height: 100%; background: url(../images/bg-top.png) no-repeat; }
+
+button.red			{ font-size: 1em; padding: 10px 40px 10px 20px; }
+
+header          	{ margin: 38px 20px 0px 20px; }
+
+menu           				{ margin: 0; font-size: .9em;  }
+menu ul.nav-small			{ display: none; /*padding: 5px 0 0 0;*/ }
+menu ul.nav-small li		{ margin-left: 40px; }
+menu ul.social-top			{ float: right; margin: -50px auto 0 auto; }
+menu ul.social-top li		{ margin-right: 15px; }
+menu img.logo				{ display: block; margin: 0 auto; width: 30%; height: auto; }
+
+.hero				{ height: 660px; padding: 0px 0 0 0; background: url(../images/bg-hero.png) bottom left no-repeat; }
+.hero span			{ display: block; heigth: auto; margin: 0 0 0 40px; padding: 80px 50% 400px 0; background: url(../images/bg-face-med.png) top right no-repeat;  } 
+.hero span h1		{ color: #b30404; font-size: 1.6em; line-height: 1em;  }
+
+.content			{ height: auto; margin: 0 40px; }
+.content h1			{ margin: 0 0 .5em 0;}
+.content .col1		{ margin: 0 0 8% 0; }
+.content .col2		{ margin: 0 0 8% 0; }
+.content .col3		{ padding: 8% 0 0 0; text-align: center; }
+.content ul.team 			{ }
+.content ul.team li 		{ display: inline-block; width: 40%; min-width: 270px; margin-top: 8%; }
+.content ul.team li span	{ display: block; width: 100%; padding-bottom: 100%; } 
+
+footer				{  }
+footer .col1		{ margin: 0 40px 40px 40px; border-bottom: 3px solid #7a7a7a;  }
+footer .col2		{ margin: 0 40px 80px 40px; }

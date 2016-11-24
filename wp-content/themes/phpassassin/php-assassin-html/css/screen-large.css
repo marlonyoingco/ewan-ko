@@ -1,0 +1,33 @@
+@charset "UTF-8";
+/* LARGE */
+html            	{ height: 100%; background: url(../images/bg-top.png) no-repeat; }
+
+button.red			{ font-size: 1em; padding: 10px 40px 10px 20px; margin: 10px 0; cursor: pointer; }
+
+header          	{ margin: 38px 40px 0px 40px; }
+
+menu            			{ margin: 0; font-size: .9em; }
+menu ul.nav-small			{ padding: 50px 0 0 0; }
+menu ul.nav-small li		{ margin-left: 35px; }
+menu ul.social-top			{ float: right; margin: 40px 0 0 0; }
+menu ul.social-top li		{ margin-right: 15px; }
+menu img.logo				{ display: block; float: left; width: 18%; height: auto; }
+
+.hero				{ padding: 0 0 0 0; background: url(../images/bg-hero.png) bottom left no-repeat; background-size: cover; }
+.hero span			{ display: block; heigth: auto; margin: 0 40px 0 40px; padding: 120px 55% 285px 0; background: url(../images/bg-face.png) top right no-repeat; } 
+.hero span h1		{ color: #b30404; font-size: 1.8em; line-height: 1em;  }
+
+.content			{ height: auto; margin: 0; }
+.content h1			{ margin: 0 0 .5em 0; }
+.content .col1		{ float: left; width: 55%; padding-right: 3%; margin: 0 0 8% 3%; border-right: 3px solid #cacaca; }
+.content .col2		{ float: left; width: 31%; margin: 0 40px 8% 3%; }
+.content .col3		{ padding-top: 8%; margin: 0 40px 0 40px; text-align: center;  }
+.content ul.team  			{  }
+.content ul.team li 		{ display: inline-block; width: 27%; margin-top: 5%; }
+.content ul.team li:not(:first-child) { margin-left: 5%; }
+.content ul.team li + li 	{ margin-left: 5%; }
+.content ul.team li span	{ display: block; width: 100%; padding-bottom: 100%;  } 
+
+footer				{  }
+footer .col1		{ float: left; width: 55%; padding-right: 3%; margin: 0 0 8% 3%; border-right: 3px solid #7a7a7a; }
+footer .col2		{ float: left; width: 31%; margin: 0 40px 8% 3%; }

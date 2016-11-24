@@ -1,0 +1,121 @@
+@media screen and (max-width: 1250px) {
+    #banner {
+        div {
+            margin: 0 40px 0 40px;
+            padding: 120px 55% 285px 0;
+            background: url(../../images/bg-face.png) top right no-repeat;
+        }
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    header {
+        #menu-icon {
+            display: block;
+        }
+        nav {
+            display: none;
+        }
+    }
+}
+
+
+@media screen and (max-width: 990px) {
+    #banner {
+        div {
+            margin: 0 0 0 40px;
+            padding: 80px 50% 400px 0;
+            background: url(../../images/bg-face-med.png) top right no-repeat;
+        }
+    }
+
+    .content {
+        .content-left {
+            border-right: none;
+            padding-left: 0px;
+            padding-bottom: 20px;
+        }
+
+        .content-right {
+            padding-left: 0px;
+            margin-top: 20px;
+        }
+    }
+
+    .team {
+        border-top: 3px solid $color-light-gray;
+        font-size: 20px;
+
+        a {
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+
+    .team {
+        .team-wrapper {
+            margin-bottom: 30px;
+        }
+    }
+
+    footer {
+        .content-left {
+            padding-left: 0;
+            padding-bottom: 20px;
+
+            border-right: none;
+            border-bottom: 3px solid $color-gray;
+        }
+
+        .content-right {
+            padding-left: 0;
+            margin-top: 20px;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #banner {
+        height: 950px;
+        text-align: center;
+        background: url(../../images/bg-hero.png) bottom left no-repeat;
+
+        div {
+            height: 780px;
+            margin: 0 0 0 0;
+            padding: 120px 40px 250px 40px;
+            background: url(../../images/bg-face-small.png) bottom center no-repeat;
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    html, body {
+        background: url(../../images/bg-top.png) no-repeat;
+        background-position-y: 38px;
+    }
+
+    header {
+        height: 195px;
+
+        #logo {
+            float: none !important;
+            text-align: center;
+        }
+
+        #social-media-icons {
+            float: none !important;
+            text-align: center;
+            margin-top: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 550px) {
+    #banner {
+        div {
+           padding-top: 70px;
+        }
+    }
+}

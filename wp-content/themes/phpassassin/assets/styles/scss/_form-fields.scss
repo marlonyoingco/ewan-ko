@@ -1,0 +1,16 @@
+.button {
+    font-size: 1em; padding: 10px 40px 10px 20px; margin: 20px 0; cursor: pointer;
+
+    &.red {
+        border: none;
+        color: #FFF;
+        background: url(../../images/btn-red.png) top right no-repeat;
+        cursor: pointer;
+        outline: none;
+
+        &:active {
+            background-position: right -96px;
+        }
+    }
+}
+

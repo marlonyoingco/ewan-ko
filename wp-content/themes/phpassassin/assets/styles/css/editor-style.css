@@ -1,0 +1,28 @@
+@import url(https://fonts.googleapis.com/css?family=Oxygen);
+.button {
+  font-size: 1em;
+  padding: 10px 40px 10px 20px;
+  margin: 20px 0;
+  cursor: pointer; }
+  .button.red {
+    border: none;
+    color: #FFF;
+    background: url(../../images/btn-red.png) top right no-repeat;
+    cursor: pointer;
+    outline: none; }
+    .button.red:active {
+      background-position: right -96px; }
+
+html, body {
+  font-family: "Oxygen", sans-serif; }
+
+p {
+  font-size: 16px;
+  line-height: 24px; }
+
+h1, h2, h3, h4, h5 {
+  color: #b30404;
+  margin: 0;
+  padding: 0; }
+
+/*# sourceMappingURL=editor-style.css.map */

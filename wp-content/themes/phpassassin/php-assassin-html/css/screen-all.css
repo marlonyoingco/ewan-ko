@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+html            	{ height: 100%; background: url(../images/bg-top.png) no-repeat; background-size: 100% auto; }
+body           	 	{ height: 100%; font-size: 20px; font-family: Tahoma, Geneva, sans-serif; line-height: 1.2em; }
+
+.clearfix       	{ width: 100%; height: 1px; clear: both; padding: 0px; margin: 0px; }
+button.red			{ border: none; color: #FFF; background: url(../images/btn-red.png) top right no-repeat; cursor: pointer; }
+button.red:ACTIVE	{ background-position: right -96px; }
+p 					{ margin: 0 0 1em 0; }
+
+menu            	{  }
+menu a				{ color: #FFF; }
+menu ul li 			{ float: left; }
+menu ul.nav-small a	{ color: #FFF; }
+
+img.logo			{ width: auto; height: auto; }
+
+.hero				{ color: #000; }
+.hero span h1		{ margin-bottom: 10px; }
+
+.content			{  }
+.content h1			{ font-size: 1.2em; line-height: 1em; color: #b30404; font-weight: bold; }
+.content .col1		{  }
+.content .col2		{  }
+.content .col3		{ clear: both; border-top: 3px solid #cacaca; text-align: center; }
+.content ul.team h3 { font-weight: bold; }
+.content .alias		{ font-style: italic;  }
+.content .team img	{ margin-right: 10px; }
+
+footer				{ position: relative; margin-top: 8%; padding: 125px 0 0 0; background: url(../images/bg-footer.png) top left no-repeat black; color: #7a7a7a; }
+footer h1			{ color: #FFF; margin-bottom: 10px; font-weight: bold; }
+footer a 			{ color: #7a7a7a; }
+footer a:HOVER		{ color: #FFF; }
+
+footer a.uparrow		{ display: inline-block; width: 70px; height: 69px; position: absolute; right: 4%; bottom: 12%; background: url(../images/sprite-arrowup.png) no-repeat; }
+footer a.uparrow:HOVER	{ background-position: 0px -69px }
+

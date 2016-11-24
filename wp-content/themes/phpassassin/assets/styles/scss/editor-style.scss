@@ -1,0 +1,18 @@
+@import "fonts";
+@import "variables";
+@import "form-fields";
+
+html, body {
+    font-family: $site-font;
+}
+
+p {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+h1, h2, h3, h4, h5 {
+    color: $color-red;
+    margin: 0;
+    padding: 0;
+}
