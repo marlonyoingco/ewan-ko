@@ -55,4 +55,32 @@
 		</div>
 	</div>
 
+
+
+	<div class="project container-fluid mtop80 ptop80" data-section="project">
+		<h2 class="text-center">
+			Our Projects
+		</h2>
+
+		<div class="row mtop30">
+			<?php
+				$projects = new WP_Query([
+					'post_type'   => 'project',
+					'post_status' => 'publish',
+					'orderby'     => 'menu_order',
+					'order'       => 'ASC'
+				]);
+			?>
+
+			<?php while($projects->have_posts()): $projects->the_post(); ?>
+				<?php $projectData = get_post_meta(get_the_ID()); ?>
+				<div class="project-wrapper mtop50 col-md-3 col-sm-6 col-xs-12 text-center">
+					<h3><?php the_title(); ?></h3>
+					<br>
+					<img src="<?= $projectData['project_screenshot'][0]; ?>" alt="<?= get_the_title(); ?>" width="100%">
+
+				</div>
+			<?php endwhile; wp_reset_postdata(); ?>
+		</div>
+	</div>
 <?php get_footer(); ?>
