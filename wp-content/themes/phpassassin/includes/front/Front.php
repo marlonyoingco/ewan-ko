@@ -34,6 +34,10 @@ class Front {
      * Include Theme Style and Scripts.
      */
     public function theme_scripts_and_styles() {
+        //Fancybox
+        wp_enqueue_script('fancybox_js', "$this->bowerPath/fancyBox/source/jquery.fancybox.js");
+        wp_enqueue_style('fancybox_css', "$this->bowerPath/fancyBox/source/jquery.fancybox.css");
+
         wp_enqueue_script('site', "$this->jsPath/site.js", ['jquery']);
         wp_enqueue_style('style', "$this->cssPath/style.css");
     }

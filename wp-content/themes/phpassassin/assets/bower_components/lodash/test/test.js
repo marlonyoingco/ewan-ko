@@ -217,10 +217,18 @@
   var QUnit = root.QUnit || (root.QUnit = load('../node_modules/qunitjs/qunit/qunit.js'));
 
   /** Load stable Lodash and QUnit Extras. */
-  var lodashStable = root.lodashStable || load('../node_modules/lodash/index.js');
-  if (lodashStable) {
-    lodashStable = lodashStable.runInContext(root);
+  var lodashStable = root.lodashStable;
+  if (!lodashStable) {
+    try {
+      lodashStable = load('../node_modules/lodash/index.js');
+    } catch (e) {
+      console.log('Error: The stable lodash dev dependency should be at least a version behind master branch.');
+      return;
+    }
+    lodashStable = lodashStable.noConflict();
   }
+  lodashStable = lodashStable.runInContext(root);
+
   var QUnitExtras = load('../node_modules/qunit-extras/qunit-extras.js');
   if (QUnitExtras) {
     QUnitExtras.runInContext(root);
@@ -274,15 +282,6 @@
     'i',  'd', 'n', 'o', 'o', 'o', 'o',  'o',  'o', 'u', 'u', 'u', 'u', 'y', 'th', 'y'
   ];
 
-  /** List of emoji modifiers. */
-  var emojiModifiers = [
-    '\ud83c\udffb',
-    '\ud83c\udffc',
-    '\ud83c\udffd',
-    '\ud83c\udffe',
-    '\ud83c\udfff'
-  ];
-
   /** Used to specify the emoji style glyph variant of characters. */
   var emojiVar = '\ufe0f';
 
@@ -301,6 +300,15 @@
     new SyntaxError,
     new TypeError,
     new URIError
+  ];
+
+  /** List of fitzpatrick modifiers. */
+  var fitzModifiers = [
+    '\ud83c\udffb',
+    '\ud83c\udffc',
+    '\ud83c\udffd',
+    '\ud83c\udffe',
+    '\ud83c\udfff'
   ];
 
   /** Used to check whether methods support typed arrays. */
@@ -629,6 +637,7 @@
   /*--------------------------------------------------------------------------*/
 
   if (params) {
+    console.log('Running lodash tests.');
     console.log('test.js invoked with arguments: ' + JSON.stringify(slice.call(params)));
   }
 
@@ -2039,9 +2048,9 @@
 
       var actual = lodashStable.reduce(funcs, function(result, func) {
         return func(result);
-      }, 'enable 24h format');
+      }, 'enable 6h format');
 
-      assert.strictEqual(actual, 'enable24hFormat');
+      assert.strictEqual(actual, 'enable6HFormat');
     });
   }());
 
@@ -2051,10 +2060,11 @@
 
   (function() {
     QUnit.test('should work with numbers', function(assert) {
-      assert.expect(5);
+      assert.expect(6);
 
       assert.strictEqual(_.camelCase('12 feet'), '12Feet');
-      assert.strictEqual(_.camelCase('enable 24h format'), 'enable24hFormat');
+      assert.strictEqual(_.camelCase('enable 6h format'), 'enable6HFormat');
+      assert.strictEqual(_.camelCase('enable 24H format'), 'enable24HFormat');
       assert.strictEqual(_.camelCase('too legit 2 quit'), 'tooLegit2Quit');
       assert.strictEqual(_.camelCase('walk 500 miles'), 'walk500Miles');
       assert.strictEqual(_.camelCase('xhr2 request'), 'xhr2Request');
@@ -2815,6 +2825,36 @@
 
       assert.deepEqual(actual, [1, 2, 3, [4]]);
       assert.deepEqual(array, [1]);
+    });
+
+    QUnit.test('should return an empty array when `array` is nullish', function(assert) {
+      assert.expect(1);
+
+      var values = [, null, undefined],
+          expected = lodashStable.map(values, alwaysEmptyArray);
+
+      var actual = lodashStable.map(values, function(value, index) {
+        try {
+          return index ? _.concat(value) : _.concat();
+        } catch (e) {}
+      });
+
+      assert.deepEqual(actual, expected);
+    });
+
+    QUnit.test('should treat nullish `array` values as empty arrays', function(assert) {
+      assert.expect(1);
+
+      var values = [null, undefined],
+          expected = lodashStable.map(values, lodashStable.constant([1, 2, [3]]));
+
+      var actual = lodashStable.map(values, function(value) {
+        try {
+          return _.concat(value, 1, [2], [[3]]);
+        } catch (e) {}
+      });
+
+      assert.deepEqual(actual, expected);
     });
 
     QUnit.test('should treat sparse arrays as dense', function(assert) {
@@ -3642,6 +3682,18 @@
         assert.deepEqual(actual, expected);
       });
     });
+
+    QUnit.test('`_.' + methodName + '` should work for function names that shadow those on `Object.prototype`', function(assert) {
+      assert.expect(1);
+
+      var curried = _.curry(function hasOwnProperty(a, b, c) {
+        return [a, b, c];
+      });
+
+      var expected = [1, 2, 3];
+
+      assert.deepEqual(curried(1)(2)(3), expected);
+    });
   });
 
   /*--------------------------------------------------------------------------*/
@@ -3996,6 +4048,16 @@
           actual = _.defaultsDeep(object, source);
 
       assert.strictEqual(actual.a.b, null);
+    });
+
+    QUnit.test('should not convert function properties to objects', function(assert) {
+      assert.expect(2);
+
+      var actual = _.defaultsDeep({}, { 'a': noop });
+      assert.strictEqual(actual.a, noop);
+
+      actual = _.defaultsDeep({}, { 'a': { 'b': noop } });
+      assert.strictEqual(actual.a.b, noop);
     });
 
     QUnit.test('should overwrite `undefined` values', function(assert) {
@@ -5748,6 +5810,8 @@
     ];
 
     var unwrappedMethods = [
+      'each',
+      'eachRight',
       'every',
       'find',
       'findIndex',
@@ -5773,6 +5837,7 @@
           func = _[methodName],
           isBy = /(^partition|By)$/.test(methodName),
           isFind = /^find/.test(methodName),
+          isOmitPick = /^(?:omit|pick)By$/.test(methodName),
           isSome = methodName == 'some';
 
       QUnit.test('`_.' + methodName + '` should provide the correct iteratee arguments', function(assert) {
@@ -5794,7 +5859,7 @@
             expected[1] += '';
           }
           if (isBy) {
-            expected.length = 1;
+            expected.length = isOmitPick ? 2 : 1;
           }
           assert.deepEqual(args, expected);
         }
@@ -5810,11 +5875,13 @@
           var array = [1];
           array[2] = 3;
 
-          var expected = [[1, 0, array], [undefined, 1, array], [3, 2, array]];
+          var expected = lodashStable.includes(objectMethods, methodName)
+            ? [[1, '0', array], [undefined, '1', array], [3, '2', array]]
+            : [[1,  0, array],  [undefined,  1,  array], [3,  2,  array]];
 
           if (isBy) {
             expected = lodashStable.map(expected, function(args) {
-              return args.slice(0, 1);
+              return args.slice(0, isOmitPick ? 2 : 1);
             });
           }
           else if (lodashStable.includes(objectMethods, methodName)) {
@@ -6314,13 +6381,13 @@
   QUnit.module('lodash.fromPairs');
 
   (function() {
-    var object = { 'barney': 36, 'fred': 40 },
-        array = [['barney', 36], ['fred', 40]];
-
     QUnit.test('should accept a two dimensional array', function(assert) {
       assert.expect(1);
 
-      var actual = _.fromPairs(array);
+      var array = [['a', 1], ['b', 2]],
+          object = { 'a': 1, 'b': 2 },
+          actual = _.fromPairs(array);
+
       assert.deepEqual(actual, object);
     });
 
@@ -6338,16 +6405,17 @@
       assert.deepEqual(actual, expected);
     });
 
-    QUnit.test('should support deep paths', function(assert) {
+    QUnit.test('should not support deep paths', function(assert) {
       assert.expect(1);
 
       var actual = _.fromPairs([['a.b.c', 1]]);
-      assert.deepEqual(actual, { 'a': { 'b': { 'c': 1 } } });
+      assert.deepEqual(actual, { 'a.b.c': 1 });
     });
 
     QUnit.test('should support consuming the return value of `_.toPairs`', function(assert) {
       assert.expect(1);
 
+      var object = { 'a.b.c': 1 };
       assert.deepEqual(_.fromPairs(_.toPairs(object)), object);
     });
 
@@ -8142,6 +8210,15 @@
       object2 = { 'a': 1, 'b': 2, 'c': 3 };
 
       assert.strictEqual(_.isEqual(object1, object2), false);
+    });
+
+    QUnit.test('should compare objects regardless of key order', function(assert) {
+      assert.expect(1);
+
+      var object1 = { 'a': 1, 'b': 2, 'c': 3 },
+          object2 = { 'c': 3, 'a': 1, 'b': 2 };
+
+      assert.strictEqual(_.isEqual(object1, object2), true);
     });
 
     QUnit.test('should compare nested objects', function(assert) {
@@ -13073,7 +13150,7 @@
       assert.deepEqual(actual, expected);
     });
 
-    QUnit.test('should work with a function for `object`', function(assert) {
+    QUnit.test('should merge onto function `object` values', function(assert) {
       assert.expect(2);
 
       function Foo() {}
@@ -13085,7 +13162,28 @@
       assert.strictEqual(Foo.a, 1);
     });
 
-    QUnit.test('should work with a non-plain `object`', function(assert) {
+    QUnit.test('should not merge onto nested function values', function(assert) {
+      assert.expect(3);
+
+      var source1 = { 'a': function() {} },
+          source2 = { 'a': { 'b': 1 } },
+          actual = _.merge({}, source1, source2),
+          expected = { 'a': { 'b': 1 } };
+
+      assert.deepEqual(actual, expected);
+
+      source1 = { 'a': function() {} };
+      source2 = { 'a': { 'b': 1 } };
+
+      expected = { 'a': function() {} };
+      expected.a.b = 1;
+
+      actual = _.merge(source1, source2);
+      assert.strictEqual(typeof actual.a, 'function');
+      assert.strictEqual(actual.a.b, 1);
+    });
+
+    QUnit.test('should merge onto non-plain `object` values', function(assert) {
       assert.expect(2);
 
       function Foo() {}
@@ -13218,6 +13316,26 @@
       });
 
       assert.deepEqual(actual, expected);
+    });
+
+    QUnit.test('should not augment source objects', function(assert) {
+      assert.expect(6);
+
+      var source1 = { 'a': [{ 'a': 1 }] },
+          source2 = { 'a': [{ 'b': 2 }] },
+          actual = _.merge({}, source1, source2);
+
+      assert.deepEqual(source1.a, [{ 'a': 1 }]);
+      assert.deepEqual(source2.a, [{ 'b': 2 }]);
+      assert.deepEqual(actual.a, [{ 'a': 1, 'b': 2 }]);
+
+      var source1 = { 'a': [[1, 2, 3]] },
+          source2 = { 'a': [[3, 4]] },
+          actual = _.merge({}, source1, source2);
+
+      assert.deepEqual(source1.a, [[1, 2, 3]]);
+      assert.deepEqual(source2.a, [[3, 4]]);
+      assert.deepEqual(actual.a, [[3, 4, 3]]);
     });
 
     QUnit.test('should shallow clone array/typed-array/plain-object sources', function(assert) {
@@ -14202,6 +14320,20 @@
       if (!isModularize) {
         assert.strictEqual(_.noConflict(), oldDash);
         assert.notStrictEqual(root._, oldDash);
+        root._ = oldDash;
+      }
+      else {
+        skipTest(assert, 2);
+      }
+    });
+
+    QUnit.test('should restore `_` only if `lodash` is the current `_` value', function(assert) {
+      assert.expect(2);
+
+      if (!isModularize) {
+        var object = root._ = {};
+        assert.strictEqual(_.noConflict(), oldDash);
+        assert.strictEqual(root._, object);
         root._ = oldDash;
       }
       else {
@@ -21210,14 +21342,16 @@
     var flag = '\ud83c\uddfa\ud83c\uddf8',
         heart = '\u2764' + emojiVar,
         hearts = '\ud83d\udc95',
+        comboGlyph = '\ud83d\udc68\u200d' + heart + '\u200d\ud83d\udc8B\u200d\ud83d\udc68',
+        hashKeycap = '#' + emojiVar + '\u20e3',
         leafs = '\ud83c\udf42',
+        noMic = '\ud83c\udf99\u20e0',
         raisedHand = '\u270B' + emojiVar,
         rocket = '\ud83d\ude80',
-        thumbsUp = '\ud83d\udc4d',
-        comboGlyph = '\ud83d\udc68\u200d' + heart + '\u200d\ud83d\udc8B\u200d\ud83d\udc68';
+        thumbsUp = '\ud83d\udc4d';
 
     QUnit.test('should account for astral symbols', function(assert) {
-      assert.expect(25);
+      assert.expect(26);
 
       var allHearts = _.repeat(hearts, 10),
           chars = hearts + comboGlyph,
@@ -21248,6 +21382,7 @@
       assert.strictEqual(_.truncate(string, { 'length': 6 }), 'A ' + leafs + '...');
 
       assert.deepEqual(_.words(string), ['A', leafs, comboGlyph, 'and', rocket]);
+      assert.deepEqual(_.toArray(hashKeycap), [hashKeycap]);
 
       lodashStable.times(2, function(index) {
         var separator = index ? RegExp(hearts) : hearts,
@@ -21263,15 +21398,40 @@
       });
     });
 
-    QUnit.test('should match lone surrogates', function(assert) {
-      assert.expect(3);
+    QUnit.test('should account for combining diacritical marks', function(assert) {
+      assert.expect(1);
 
-      var pair = hearts.split(''),
-          surrogates = pair[0] + ' ' + pair[1];
+      var values = lodashStable.map(comboMarks, function(mark) {
+        return 'o' + mark;
+      });
 
-      assert.strictEqual(_.size(surrogates), 3);
-      assert.deepEqual(_.toArray(surrogates), [pair[0], ' ', pair[1]]);
-      assert.deepEqual(_.words(surrogates), []);
+      var expected = lodashStable.map(values, function(value) {
+        return [1, [value], [value]];
+      });
+
+      var actual = lodashStable.map(values, function(value) {
+        return [_.size(value), _.toArray(value), _.words(value)];
+      });
+
+      assert.deepEqual(actual, expected);
+    });
+
+    QUnit.test('should account for fitzpatrick modifiers', function(assert) {
+      assert.expect(1);
+
+      var values = lodashStable.map(fitzModifiers, function(modifier) {
+        return thumbsUp + modifier;
+      });
+
+      var expected = lodashStable.map(values, function(value) {
+        return [1, [value], [value]];
+      });
+
+      var actual = lodashStable.map(values, function(value) {
+        return [_.size(value), _.toArray(value), _.words(value)];
+      });
+
+      assert.deepEqual(actual, expected);
     });
 
     QUnit.test('should account for regional symbols', function(assert) {
@@ -21298,28 +21458,10 @@
       assert.deepEqual(_.words(heart), [heart]);
     });
 
-    QUnit.test('should account for modifiers', function(assert) {
+    QUnit.test('should account for variation selectors with fitzpatrick modifiers', function(assert) {
       assert.expect(1);
 
-      var values = lodashStable.map(emojiModifiers, function(modifier) {
-        return thumbsUp + modifier;
-      });
-
-      var expected = lodashStable.map(values, function(value) {
-        return [1, [value], [value]];
-      });
-
-      var actual = lodashStable.map(values, function(value) {
-        return [_.size(value), _.toArray(value), _.words(value)];
-      });
-
-      assert.deepEqual(actual, expected);
-    });
-
-    QUnit.test('should account for variation selectors with modifiers', function(assert) {
-      assert.expect(1);
-
-      var values = lodashStable.map(emojiModifiers, function(modifier) {
+      var values = lodashStable.map(fitzModifiers, function(modifier) {
         return raisedHand + modifier;
       });
 
@@ -21334,22 +21476,22 @@
       assert.deepEqual(actual, expected);
     });
 
-    QUnit.test('should account for combining diacritical marks', function(assert) {
+    QUnit.test('should match lone surrogates', function(assert) {
+      assert.expect(3);
+
+      var pair = hearts.split(''),
+          surrogates = pair[0] + ' ' + pair[1];
+
+      assert.strictEqual(_.size(surrogates), 3);
+      assert.deepEqual(_.toArray(surrogates), [pair[0], ' ', pair[1]]);
+      assert.deepEqual(_.words(surrogates), []);
+    });
+
+    QUnit.test('should match side by side fitzpatrick modifiers separately ', function(assert) {
       assert.expect(1);
 
-      var values = lodashStable.map(comboMarks, function(mark) {
-        return 'o' + mark;
-      });
-
-      var expected = lodashStable.map(values, function(value) {
-        return [1, [value], [value]];
-      });
-
-      var actual = lodashStable.map(values, function(value) {
-        return [_.size(value), _.toArray(value), _.words(value)];
-      });
-
-      assert.deepEqual(actual, expected);
+      var string = fitzModifiers[0] + fitzModifiers[0];
+      assert.deepEqual(_.toArray(string), [fitzModifiers[0], fitzModifiers[0]]);
     });
   }());
 
@@ -22047,10 +22189,12 @@
     });
 
     QUnit.test('should work with compound words', function(assert) {
-      assert.expect(7);
+      assert.expect(9);
 
       assert.deepEqual(_.words('12Feet'), ['12', 'Feet']);
-      assert.deepEqual(_.words('enable 24h format'), ['enable', '24h', 'format']);
+      assert.deepEqual(_.words('enable 6h format'), ['enable', '6', 'h', 'format']);
+      assert.deepEqual(_.words('enable 24H format'), ['enable', '24', 'H', 'format']);
+      assert.deepEqual(_.words('isISO8601'), ['is', 'ISO', '8601']);
       assert.deepEqual(_.words('tooLegit2Quit'), ['too', 'Legit', '2', 'Quit']);
       assert.deepEqual(_.words('walk500Miles'), ['walk', '500', 'Miles']);
       assert.deepEqual(_.words('xhr2Request'), ['xhr', '2', 'Request']);

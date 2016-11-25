@@ -176,6 +176,25 @@ header {
     }
 }
 
+.project {
+    border-top: 3px solid $color-light-gray;
+}
+
+.project-contents{ 
+    display:none; 
+    padding:10px 20px;
+        
+    img{
+        width:65%;
+        display:block;
+        margin:0 auto 15px auto;
+    }
+
+    a{ display:inline-block; margin-top:15px; }
+    a:hover{ text-decoration:none; }
+
+}
+
 footer {
     position: relative;
     margin-top: 8%;

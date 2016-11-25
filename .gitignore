@@ -18,3 +18,4 @@ wp-content/*
 !wp-content/plugins/
 wp-content/themes/*
 !wp-content/themes/phpassassin/
+wp-content/themes/phpassassin/assets/styles/.sass-cache

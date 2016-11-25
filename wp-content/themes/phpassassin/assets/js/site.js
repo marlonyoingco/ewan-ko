@@ -14,4 +14,17 @@ jQuery(document).ready(function($) {
             }, 100);
         }
     });
+
+    //Fancybox
+    $('.fancybox').fancybox({
+        maxWidth    : 1000,
+        maxHeight   : 800,
+        fitToView   : true,
+        width       : '85%',
+        autoSize    : false,
+        closeClick  : false,
+        openEffect  : 'none',
+        closeEffect : 'none'
+    });
+
 });

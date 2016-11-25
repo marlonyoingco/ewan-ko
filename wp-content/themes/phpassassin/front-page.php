@@ -77,7 +77,26 @@
 				<div class="project-wrapper mtop50 col-md-3 col-sm-6 col-xs-12 text-center">
 					<h3><?php the_title(); ?></h3>
 					<br>
-					<img src="<?= $projectData['project_screenshot'][0]; ?>" alt="<?= get_the_title(); ?>" width="100%">
+					<a href="#project<?= get_the_ID(); ?>"
+					   title="<?= get_the_title(); ?>" 
+					   class="fancybox">
+							<img src="<?= $projectData['project_screenshot'][0]; ?>" 
+								 alt="<?= get_the_title(); ?>" width="100%">
+					</a>
+
+					<div class="project-contents" id="project<?= get_the_ID(); ?>">
+						<img src="<?= $projectData['project_screenshot'][0]; ?>" 
+							 alt="<?= get_the_title(); ?>">
+							 
+						<p><?= $projectData['project_description'][0]; ?></p>
+
+						<?php if(!empty($projectData['project_url'][0])): ?>
+							<a href="<?= $projectData['project_url'][0]; ?>" 
+							   class="button red"
+							   target="_blank">View Site</a>
+						<?php endif; ?>
+					</div>
+					
 
 				</div>
 			<?php endwhile; wp_reset_postdata(); ?>
