@@ -12277,7 +12277,8 @@ header {
   display: none;
   padding: 10px 20px; }
   .project-contents img {
-    width: 65%;
+    max-width: 100%;
+    width: auto;
     display: block;
     margin: 0 auto 15px auto; }
   .project-contents a {
